@@ -1,1056 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Agentic Workflow</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
-
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --surface: #ffffff;
-      --surface-2: #eef2f8;
-      --surface-3: #e7edf7;
-      --text: #111827;
-      --muted: #667085;
-      --muted-2: #98a2b3;
-      --border: rgba(17, 24, 39, 0.08);
-      --border-strong: rgba(17, 24, 39, 0.14);
-      --primary: #2563eb;
-      --primary-2: #1d4ed8;
-      --primary-soft: rgba(37, 99, 235, 0.08);
-      --success: #157f3d;
-      --warning: #a16207;
-      --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.06);
-      --shadow-md: 0 20px 50px rgba(15, 23, 42, 0.10);
-      --radius-sm: 14px;
-      --radius-md: 18px;
-      --radius-lg: 24px;
-      --radius-full: 999px;
-      --max-width: 1440px;
-    }
-
-    html[data-theme="dark"] {
-      --bg: #0b1020;
-      --surface: #12192b;
-      --surface-2: #182033;
-      --surface-3: #1c253b;
-      --text: #edf2ff;
-      --muted: #9aa4b2;
-      --muted-2: #7f8b9d;
-      --border: rgba(255,255,255,0.08);
-      --border-strong: rgba(255,255,255,0.14);
-      --primary: #7cb3ff;
-      --primary-2: #5c97ea;
-      --primary-soft: rgba(124, 179, 255, 0.12);
-      --success: #4ade80;
-      --warning: #fbbf24;
-      --shadow-sm: 0 10px 30px rgba(0, 0, 0, 0.24);
-      --shadow-md: 0 24px 60px rgba(0, 0, 0, 0.34);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(37,99,235,0.08), transparent 22%),
-        radial-gradient(circle at top right, rgba(124,58,237,0.06), transparent 18%),
-        var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.6;
-      font-size: 16px;
-    }
-
-    button, input, select {
-      font: inherit;
-      color: inherit;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .app-shell {
-      width: min(var(--max-width), calc(100% - 32px));
-      margin: 0 auto;
-      padding: 20px 0 32px;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      padding: 14px 0 18px;
-      backdrop-filter: blur(14px);
-      background: color-mix(in srgb, var(--bg) 82%, transparent);
-    }
-
-    .topbar-inner {
-      width: min(var(--max-width), calc(100% - 32px));
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .brand-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--primary), #7c3aed);
-      display: grid;
-      place-items: center;
-      color: white;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      box-shadow: var(--shadow-sm);
-      flex-shrink: 0;
-    }
-
-    .brand-copy h1 {
-      font-size: 1.08rem;
-      line-height: 1.2;
-      letter-spacing: -0.03em;
-      font-weight: 700;
-    }
-
-    .brand-copy p {
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      padding: 10px 16px;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      transition: 0.2s ease;
-      box-shadow: var(--shadow-sm);
-      font-weight: 500;
-      font-size: 0.92rem;
-    }
-
-    .btn:hover {
-      border-color: var(--border-strong);
-      transform: translateY(-1px);
-    }
-
-    .btn.primary {
-      background: var(--primary);
-      color: white;
-      border-color: transparent;
-    }
-
-    .btn.primary:hover {
-      background: var(--primary-2);
-    }
-
-    .btn.ghost {
-      background: transparent;
-      box-shadow: none;
-    }
-
-    .hero {
-      padding: 18px 0 22px;
-    }
-
-    .hero-card {
-      background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, transparent), var(--surface));
-      border: 1px solid var(--border);
-      border-radius: 32px;
-      box-shadow: var(--shadow-md);
-      padding: 34px;
-    }
-
-    .hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
-    }
-
-    .hero-copy {
-      max-width: 760px;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
-      background: var(--primary-soft);
-      color: var(--primary);
-      border-radius: var(--radius-full);
-      font-size: 0.82rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-
-    .hero-copy h2 {
-      font-size: clamp(2.1rem, 1.5rem + 2vw, 4rem);
-      line-height: 1.04;
-      letter-spacing: -0.06em;
-      margin-bottom: 14px;
-      max-width: 12ch;
-    }
-
-    .hero-copy p {
-      max-width: 62ch;
-      color: var(--muted);
-      font-size: 1rem;
-    }
-
-    .hero-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(180px, 1fr));
-      gap: 16px;
-      width: 100%;
-    }
-
-    .metric-card {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 20px;
-    }
-
-    .metric-label {
-      color: var(--muted);
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-    }
-
-    .metric-value {
-      font-size: clamp(1.8rem, 1.3rem + 1vw, 2.4rem);
-      line-height: 1;
-      font-weight: 800;
-      letter-spacing: -0.05em;
-      margin-bottom: 6px;
-    }
-
-    .metric-note {
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .workspace {
-      display: grid;
-      grid-template-columns: 320px minmax(0, 1fr);
-      gap: 22px;
-      align-items: start;
-    }
-
-    .sidebar,
-    .content-panel,
-    .search-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      border-radius: 28px;
-    }
-
-    .sidebar {
-      padding: 24px;
-      position: sticky;
-      top: 96px;
-    }
-
-    .sidebar-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .sidebar-head h3 {
-      font-size: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .sidebar-section + .sidebar-section {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border);
-    }
-
-    .sidebar-label {
-      display: block;
-      font-size: 0.84rem;
-      color: var(--muted);
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
-    .select,
-    .input {
-      width: 100%;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--text);
-      padding: 13px 14px;
-      border-radius: 14px;
-      outline: none;
-      transition: 0.2s ease;
-    }
-
-    .select:focus,
-    .input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px var(--primary-soft);
-    }
-
-    .chip-wrap {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .chip {
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--muted);
-      padding: 8px 12px;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      font-size: 0.82rem;
-      transition: 0.18s ease;
-    }
-
-    .chip:hover,
-    .chip.active {
-      background: var(--primary-soft);
-      color: var(--primary);
-      border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
-    }
-
-    .content-area {
-      display: grid;
-      gap: 20px;
-    }
-
-    .search-panel {
-      padding: 22px;
-    }
-
-    .search-panel-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .search-panel-top h3 {
-      font-size: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .search-box {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .search-main {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      padding: 15px 16px;
-      border-radius: 18px;
-      transition: 0.2s ease;
-    }
-
-    .search-main:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px var(--primary-soft);
-    }
-
-    .search-main input {
-      width: 100%;
-      border: none;
-      outline: none;
-      background: transparent;
-      color: var(--text);
-      font-size: 1rem;
-    }
-
-    .search-main input::placeholder {
-      color: var(--muted);
-    }
-
-    .search-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .result-count {
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .kbd {
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      border-radius: 10px;
-      padding: 4px 8px;
-      color: var(--muted);
-      font-size: 0.78rem;
-    }
-
-    .active-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .filter-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface-2);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 8px 12px;
-      border-radius: var(--radius-full);
-      font-size: 0.82rem;
-    }
-
-    .content-panel {
-      padding: 22px;
-    }
-
-    .results-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .results-head h3 {
-      font-size: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .results-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .tool-card {
-      background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, transparent), var(--surface-2));
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      min-height: 260px;
-      transition: 0.2s ease;
-    }
-
-    .tool-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
-      border-color: var(--border-strong);
-    }
-
-    .tool-card-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: flex-start;
-    }
-
-    .tool-card-top h4 {
-      font-size: 1.08rem;
-      line-height: 1.3;
-      letter-spacing: -0.03em;
-    }
-
-    .badge {
-      padding: 6px 10px;
-      background: var(--primary-soft);
-      color: var(--primary);
-      border-radius: var(--radius-full);
-      font-size: 0.76rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .tool-desc {
-      color: var(--muted);
-      font-size: 0.93rem;
-      line-height: 1.7;
-    }
-
-    .tool-info {
-      display: grid;
-      gap: 10px;
-    }
-
-    .tool-info-row {
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .tool-info-row strong {
-      color: var(--text);
-    }
-
-    .keyword-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .keyword {
-      background: var(--surface-3);
-      color: var(--muted);
-      border-radius: var(--radius-full);
-      padding: 6px 10px;
-      font-size: 0.76rem;
-      border: 1px solid var(--border);
-    }
-
-    .tool-actions {
-      margin-top: auto;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .tool-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 42px;
-      padding: 0 16px;
-      border-radius: var(--radius-full);
-      font-size: 0.88rem;
-      font-weight: 600;
-      border: 1px solid transparent;
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .tool-link.secondary {
-      background: transparent;
-      color: var(--text);
-      border-color: var(--border);
-    }
-
-    .empty-state,
-    .loading-state {
-      padding: 50px 24px;
-      text-align: center;
-      color: var(--muted);
-      border: 1px dashed var(--border-strong);
-      border-radius: 22px;
-      background: var(--surface-2);
-    }
-
-    .mobile-filter-toggle {
-      display: none;
-    }
-
-    @media (max-width: 1180px) {
-      .workspace {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        position: static;
-      }
-
-      .results-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    @media (max-width: 820px) {
-      .hero-card {
-        padding: 24px;
-      }
-
-      .hero-metrics {
-        grid-template-columns: 1fr;
-      }
-
-      .search-box {
-        grid-template-columns: 1fr;
-      }
-
-      .results-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .topbar-inner {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .app-shell,
-      .topbar-inner {
-        width: min(var(--max-width), calc(100% - 20px));
-      }
-
-      .hero-copy h2 {
-        max-width: 100%;
-      }
-
-      .sidebar,
-      .search-panel,
-      .content-panel,
-      .hero-card {
-        border-radius: 22px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools Directory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --color-bg: #f5f5f5; --color-sidebar-bg: #ffffff; --color-content-bg: #ffffff;
+  --color-border: #e5e5e5; --color-text: #1a1a1a; --color-text-muted: #666;
+  --color-text-faint: #999; --color-primary: #2563eb; --color-primary-light: #eff6ff;
+  --color-active-item: #eff6ff; --color-active-text: #2563eb;
+  --color-header-bg: #1e40af; --sidebar-width: 280px; --header-height: 50px;
+  font-family: "Inter", sans-serif; font-size: 14px; color: var(--color-text);
+}
+[data-theme="dark"] {
+  --color-bg: #111; --color-sidebar-bg: #1a1a1a; --color-content-bg: #1a1a1a;
+  --color-border: #2a2a2a; --color-text: #e5e5e5; --color-text-muted: #999;
+  --color-text-faint: #555; --color-primary: #3b82f6; --color-primary-light: #1e3a5f;
+  --color-active-item: #1e3a5f; --color-active-text: #60a5fa;
+  --color-header-bg: #1e293b;
+}
+body { background:var(--color-bg); height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+.top-header { background:var(--color-header-bg); color:#fff; height:var(--header-height); display:flex; align-items:center; padding:0 16px; gap:10px; flex-shrink:0; border-bottom:1px solid rgba(255,255,255,0.1); }
+.top-header h1 { font-size:15px; font-weight:600; }
+.header-right { margin-left:auto; }
+.theme-toggle { background:rgba(255,255,255,0.15); border:none; color:#fff; width:30px; height:30px; border-radius:6px; cursor:pointer; font-size:14px; transition:background 0.15s; }
+.theme-toggle:hover { background:rgba(255,255,255,0.25); }
+.app-body { display:flex; flex:1; overflow:hidden; }
+.sidebar { width:var(--sidebar-width); background:var(--color-sidebar-bg); border-right:1px solid var(--color-border); display:flex; flex-direction:column; flex-shrink:0; overflow:hidden; }
+.sidebar-search { padding:10px 12px; border-bottom:1px solid var(--color-border); }
+.sidebar-search input { width:100%; background:var(--color-bg); border:1px solid var(--color-border); border-radius:6px; padding:6px 10px 6px 30px; font-size:13px; color:var(--color-text); outline:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:8px center; transition:border-color 0.15s; }
+.sidebar-search input:focus { border-color:var(--color-primary); }
+.sidebar-search input::placeholder { color:var(--color-text-faint); }
+.sidebar-nav { flex:1; overflow-y:auto; padding:8px 0; }
+.sidebar-nav::-webkit-scrollbar { width:4px; }
+.sidebar-nav::-webkit-scrollbar-thumb { background:var(--color-border); border-radius:2px; }
+.category-header { display:flex; align-items:center; gap:8px; padding:6px 12px; cursor:pointer; user-select:none; transition:background 0.1s; }
+.category-header:hover { background:var(--color-bg); }
+.category-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.category-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-text-muted); flex:1; }
+.category-count { font-size:11px; color:var(--color-text-faint); background:var(--color-bg); padding:1px 6px; border-radius:10px; border:1px solid var(--color-border); }
+.category-arrow { color:var(--color-text-faint); font-size:9px; transition:transform 0.15s; }
+.category-group.open .category-arrow { transform:rotate(90deg); }
+.tool-list { display:none; padding:2px 0; }
+.category-group.open .tool-list { display:block; }
+.tool-item { display:flex; align-items:center; gap:8px; padding:6px 12px 6px 24px; cursor:pointer; transition:background 0.1s; border-left:2px solid transparent; }
+.tool-item:hover { background:var(--color-bg); }
+.tool-item.active { background:var(--color-active-item); border-left-color:var(--color-primary); }
+.tool-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.tool-name { font-size:13px; color:var(--color-text); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tool-item.active .tool-name { color:var(--color-active-text); font-weight:500; }
+.main-content { flex:1; overflow-y:auto; background:var(--color-bg); display:flex; flex-direction:column; }
+.main-content::-webkit-scrollbar { width:6px; }
+.main-content::-webkit-scrollbar-thumb { background:var(--color-border); border-radius:3px; }
+.welcome-screen { flex:1; display:flex; align-items:center; justify-content:center; }
+.welcome-card { background:var(--color-content-bg); border:1px solid var(--color-border); border-radius:12px; padding:40px 48px; text-align:center; max-width:380px; }
+.welcome-emoji { font-size:32px; margin-bottom:12px; }
+.welcome-card h2 { font-size:18px; font-weight:600; margin-bottom:8px; }
+.welcome-card p { font-size:13px; color:var(--color-text-muted); }
+.tool-detail { display:none; flex:1; flex-direction:column; }
+.tool-detail.visible { display:flex; }
+.detail-header { background:var(--color-content-bg); border-bottom:1px solid var(--color-border); padding:16px 24px; display:flex; align-items:center; gap:10px; }
+.detail-header h2 { font-size:17px; font-weight:600; }
+.detail-cat-badge { font-size:11px; font-weight:500; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:0.04em; }
+.detail-body { padding:20px 24px; display:flex; flex-direction:column; gap:12px; }
+.info-card { background:var(--color-content-bg); border:1px solid var(--color-border); border-radius:8px; padding:14px 18px; }
+.info-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-text-faint); margin-bottom:5px; }
+.info-value { font-size:13px; color:var(--color-text); line-height:1.6; }
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.free-plan-card { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px 18px; }
+[data-theme="dark"] .free-plan-card { background:#052e16; border-color:#166534; }
+.free-plan-card .info-label { color:#166534; }
+[data-theme="dark"] .free-plan-card .info-label { color:#4ade80; }
+.free-plan-card .info-value { color:#15803d; }
+[data-theme="dark"] .free-plan-card .info-value { color:#86efac; }
+.best-for-badge { display:inline-flex; align-items:center; gap:6px; border-radius:6px; padding:5px 10px; font-size:13px; font-weight:500; }
+.keywords-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.keyword-tag { background:var(--color-bg); border:1px solid var(--color-border); border-radius:4px; padding:2px 8px; font-size:11px; color:var(--color-text-muted); }
+.loading-state, .no-results { text-align:center; padding:40px 16px; color:var(--color-text-muted); font-size:13px; }
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <div class="brand">
-        <div class="brand-mark">AW</div>
-        <div class="brand-copy">
-          <h1>Agentic Workflow</h1>
-          <p>Search-first AI tools directory powered by Google Sheets</p>
-        </div>
-      </div>
-
-      <div class="topbar-actions">
-        <button class="btn ghost" id="themeToggle">Toggle theme</button>
-        <button class="btn" id="clearAllBtn">Clear filters</button>
+<header class="top-header">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+  <h1>AI Tools Directory</h1>
+  <div class="header-right">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+  </div>
+</header>
+<div class="app-body">
+  <aside class="sidebar">
+    <div class="sidebar-search">
+      <input type="text" id="searchInput" placeholder="Search tools..." oninput="handleSearch(this.value)">
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <div class="loading-state">Loading tools...</div>
+    </nav>
+  </aside>
+  <main class="main-content" id="mainContent">
+    <div class="welcome-screen" id="welcomeScreen">
+      <div class="welcome-card">
+        <div class="welcome-emoji">👋</div>
+        <h2>Welcome to AI Tools Directory</h2>
+        <p>Select a tool from the left to view its details and free plan info.</p>
       </div>
     </div>
-  </header>
-
-  <main class="app-shell">
-    <section class="hero">
-      <div class="hero-card">
-        <div class="hero-top">
-          <div class="hero-copy">
-            <div class="eyebrow">Search-first premium workspace</div>
-            <h2>Find the right AI tool faster.</h2>
-            <p>
-              Browse your AI tools library with a spacious search-first experience,
-              category filters, audience filters, live Google Sheets sync,
-              and typo-tolerant discovery.
-            </p>
-          </div>
-        </div>
-
-        <div class="hero-metrics">
-          <div class="metric-card">
-            <div class="metric-label">Total tools</div>
-            <div class="metric-value" id="totalTools">—</div>
-            <div class="metric-note">Loaded from your live Apps Script endpoint</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Categories</div>
-            <div class="metric-value" id="totalCategories">—</div>
-            <div class="metric-note">Grouped for faster filtering</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Search mode</div>
-            <div class="metric-value" style="font-size:1.15rem;line-height:1.35">Fuzzy + filterable</div>
-            <div class="metric-note">Search names, use cases, keywords, and plans</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="workspace">
-      <aside class="sidebar">
-        <div class="sidebar-head">
-          <h3>Filters</h3>
-          <button class="btn ghost" id="sidebarResetBtn">Reset</button>
-        </div>
-
-        <div class="sidebar-section">
-          <label class="sidebar-label" for="categoryFilter">Category</label>
-          <select id="categoryFilter" class="select">
-            <option value="all">All categories</option>
-          </select>
-        </div>
-
-        <div class="sidebar-section">
-          <label class="sidebar-label" for="bestForFilter">Best for</label>
-          <select id="bestForFilter" class="select">
-            <option value="all">All audiences</option>
-          </select>
-        </div>
-
-        <div class="sidebar-section">
-          <label class="sidebar-label">Quick categories</label>
-          <div class="chip-wrap" id="categoryChips"></div>
-        </div>
-      </aside>
-
-      <section class="content-area">
-        <div class="search-panel">
-          <div class="search-panel-top">
-            <h3>Search directory</h3>
-            <span class="kbd">Ctrl + K</span>
-          </div>
-
-          <div class="search-box">
-            <div class="search-main">
-              <span>🔎</span>
-              <input
-                id="searchInput"
-                type="search"
-                placeholder="Search by tool name, what it does, keywords, best for, or free plan..."
-                autocomplete="off"
-              />
-            </div>
-            <button class="btn primary" id="searchFocusBtn">Focus search</button>
-          </div>
-
-          <div class="search-meta">
-            <div class="result-count" id="resultCount">Loading tools...</div>
-            <div class="active-filters" id="activeFilters"></div>
-          </div>
-        </div>
-
-        <div class="content-panel">
-          <div class="results-head">
-            <h3>Results</h3>
-            <span class="result-count">Live source: Google Sheets → Apps Script</span>
-          </div>
-
-          <div id="results">
-            <div class="loading-state">Loading your tool library...</div>
-          </div>
-        </div>
-      </section>
-    </section>
+    <div class="tool-detail" id="toolDetail"></div>
   </main>
+</div>
+<script>
+const DATA_URL='https://script.google.com/macros/s/AKfycbzLz-K0pkz4PGCDqszApIQh7xU8xEw2v5V4zjX1R0uVIIyg9-SxJFkNRR7qXJ6SGmEV/exec';
+const CAT_COLORS={'Image Generation':'#8b5cf6','Video Generation':'#ef4444','Audio & Voice':'#f59e0b','Writing & Content':'#10b981','Code Assistant':'#3b82f6','AI Agents':'#ec4899','Productivity':'#06b6d4','Research & Search':'#84cc16','Data & Analytics':'#f97316','Design & UI':'#a855f7'};
+let allTools=[];
 
-  <script>
-const DATA_URL = 'https://script.google.com/macros/s/AKfycbzLz-K0pkz4PGCDqszApIQh7xU8xEw2v5V4zjX1R0uVIIyg9-SxJFkNRR7qXJ6SGmEV/exec';
-    let tools = [];
-    let fuse = null;
-
-    const html = document.documentElement;
-    const themeToggle = document.getElementById('themeToggle');
-
-    const totalToolsEl = document.getElementById('totalTools');
-    const totalCategoriesEl = document.getElementById('totalCategories');
-    const resultCountEl = document.getElementById('resultCount');
-    const resultsEl = document.getElementById('results');
-
-    const searchInput = document.getElementById('searchInput');
-    const searchFocusBtn = document.getElementById('searchFocusBtn');
-
-    const categoryFilter = document.getElementById('categoryFilter');
-    const bestForFilter = document.getElementById('bestForFilter');
-
-    const clearAllBtn = document.getElementById('clearAllBtn');
-    const sidebarResetBtn = document.getElementById('sidebarResetBtn');
-
-    const categoryChipsEl = document.getElementById('categoryChips');
-    const activeFiltersEl = document.getElementById('activeFilters');
-
-    function setInitialTheme() {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      html.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+async function loadData(){
+  try{
+    const res=await fetch(DATA_URL,{redirect:'follow'});
+    const json=await res.json();
+    if(json.success&&json.data){
+      const seen=new Set();
+      allTools=json.data.filter(t=>{const k=t.ID+t['Tool Name'];if(seen.has(k))return false;seen.add(k);return true;});
+      renderSidebar(allTools);
     }
+  }catch(e){
+    document.getElementById('sidebarNav').innerHTML='<div class="loading-state">⚠️ Could not load data.</div>';
+    console.error(e);
+  }
+}
 
-    function toggleTheme() {
-      const current = html.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
-    }
+function groupByCategory(tools){
+  const g={};
+  tools.forEach(t=>{const c=t.Category||'Other';if(!g[c])g[c]=[];g[c].push(t);});
+  return g;
+}
 
-    function norm(value) {
-      return (value || '').toString().trim();
-    }
+function renderSidebar(tools){
+  const nav=document.getElementById('sidebarNav');
+  const groups=groupByCategory(tools);
+  if(!Object.keys(groups).length){nav.innerHTML='<div class="no-results">No tools found.</div>';return;}
+  nav.innerHTML='';
+  Object.entries(groups).forEach(([cat,items])=>{
+    const color=CAT_COLORS[cat]||'#6b7280';
+    const g=document.createElement('div');
+    g.className='category-group open';
+    g.innerHTML=`<div class="category-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="category-dot" style="background:${color}"></span>
+      <span class="category-title">${cat}</span>
+      <span class="category-count">${items.length}</span>
+      <span class="category-arrow">▶</span>
+    </div>
+    <div class="tool-list">${items.map(t=>`<div class="tool-item" data-uid="${t.ID}||${t['Tool Name']}" onclick="selectTool('${t.ID}','${t['Tool Name'].replace(/'/g,"\'")}')">
+      <span class="tool-dot" style="background:${color}"></span>
+      <span class="tool-name">${t['Tool Name']}</span>
+    </div>`).join('')}</div>`;
+    nav.appendChild(g);
+  });
+}
 
-    function esc(str) {
-      return (str || '').replace(/[&<>'"]/g, function(t) {
-        return {
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          "'": '&#39;',
-          '"': '&quot;'
-        }[t] || t;
-      });
-    }
+function selectTool(id,name){
+  const tool=allTools.find(t=>t.ID===id&&t['Tool Name']===name);
+  if(!tool)return;
+  document.querySelectorAll('.tool-item').forEach(el=>el.classList.remove('active'));
+  document.querySelector(`[data-uid="${id}||${name}"]`)?.classList.add('active');
+  document.getElementById('welcomeScreen').style.display='none';
+  const detail=document.getElementById('toolDetail');
+  detail.classList.add('visible');
+  const color=CAT_COLORS[tool.Category]||'#6b7280';
+  const keywords=(tool.Keywords||'').split(',').map(k=>k.trim()).filter(Boolean);
+  detail.innerHTML=`
+    <div class="detail-header">
+      <span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>
+      <h2>${tool['Tool Name']}</h2>
+      <span class="detail-cat-badge" style="background:${color}22;color:${color}">${tool.Category}</span>
+    </div>
+    <div class="detail-body">
+      <div class="info-card"><div class="info-label">What It Does</div><div class="info-value">${tool['What It Does']||'—'}</div></div>
+      <div class="info-grid">
+        <div class="info-card"><div class="info-label">Best For</div><div class="info-value"><span class="best-for-badge" style="background:${color}18;color:${color}">👤 ${tool['Best For']||'—'}</span></div></div>
+        <div class="info-card"><div class="info-label">Tool ID</div><div class="info-value" style="color:var(--color-text-faint)">#${tool.ID}</div></div>
+      </div>
+      <div class="free-plan-card"><div class="info-label">🆓 Free Plan Details</div><div class="info-value">${tool['Free Plan Details']||'No free plan info.'}</div></div>
+      ${keywords.length?`<div class="info-card"><div class="info-label">Keywords</div><div class="keywords-row">${keywords.map(k=>`<span class="keyword-tag">${k}</span>`).join('')}</div></div>`:''}
+    </div>`;
+}
 
-    function uniqueSorted(arr) {
-      return [...new Set(arr.filter(Boolean))].sort((a, b) => a.localeCompare(b));
-    }
+function handleSearch(q){
+  q=q.toLowerCase().trim();
+  if(!q){renderSidebar(allTools);return;}
+  const f=allTools.filter(t=>t['Tool Name']?.toLowerCase().includes(q)||t.Category?.toLowerCase().includes(q)||t.Keywords?.toLowerCase().includes(q)||t['What It Does']?.toLowerCase().includes(q)||t['Best For']?.toLowerCase().includes(q));
+  renderSidebar(f);
+  document.querySelectorAll('.category-group').forEach(g=>g.classList.add('open'));
+}
 
-    function isRealUrl(value) {
-      return /^https?:\/\//i.test((value || '').trim());
-    }
+function toggleTheme(){
+  const h=document.documentElement;
+  const d=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',d?'light':'dark');
+  document.querySelector('.theme-toggle').textContent=d?'🌙':'☀️';
+}
 
-    function setupFuse() {
-      fuse = new Fuse(tools, {
-        keys: [
-          { name: 'toolName', weight: 0.35 },
-          { name: 'whatItDoes', weight: 0.24 },
-          { name: 'keywords', weight: 0.18 },
-          { name: 'category', weight: 0.10 },
-          { name: 'bestFor', weight: 0.08 },
-          { name: 'freePlanDetails', weight: 0.05 }
-        ],
-        threshold: 0.34,
-        ignoreLocation: true,
-        minMatchCharLength: 2
-      });
-    }
-
-    async function loadTools() {
-      try {
-        const response = await fetch(DATA_URL);
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-
-        const payload = await response.json();
-        const raw = Array.isArray(payload) ? payload : (payload.data || []);
-
-        tools = raw.map(item => ({
-          id: norm(item['ID'] || item.id),
-          category: norm(item['Category'] || item.category),
-          toolName: norm(item['Tool Name'] || item.toolName),
-          website: norm(item['Website'] || item.website),
-          whatItDoes: norm(item['What It Does'] || item.whatItDoes),
-          bestFor: norm(item['Best For'] || item.bestFor),
-          freePlanDetails: norm(item['Free Plan Details'] || item.freePlanDetails),
-          keywords: norm(item['Keywords'] || item.keywords)
-        })).filter(tool => tool.toolName && tool.category);
-
-        setupFuse();
-        populateFilters();
-
-        totalToolsEl.textContent = tools.length;
-        totalCategoriesEl.textContent = uniqueSorted(tools.map(t => t.category)).length;
-
-        runFilters();
-      } catch (error) {
-        resultsEl.innerHTML = `
-          <div class="empty-state">
-            <h3 style="margin-bottom:8px;color:var(--text);">Could not load data</h3>
-            <p>${esc(error.message)}</p>
-          </div>
-        `;
-        resultCountEl.textContent = 'Error loading tools';
-      }
-    }
-
-    function populateFilters() {
-      const categories = uniqueSorted(tools.map(t => t.category));
-      const audiences = uniqueSorted(
-        tools.flatMap(t => t.bestFor.split(',').map(v => v.trim()))
-      );
-
-      categoryFilter.innerHTML = '<option value="all">All categories</option>';
-      bestForFilter.innerHTML = '<option value="all">All audiences</option>';
-
-      categories.forEach(category => {
-        const option = document.createElement('option');
-        option.value = category;
-        option.textContent = category;
-        categoryFilter.appendChild(option);
-      });
-
-      audiences.forEach(audience => {
-        const option = document.createElement('option');
-        option.value = audience;
-        option.textContent = audience;
-        bestForFilter.appendChild(option);
-      });
-
-      categoryChipsEl.innerHTML = ['all', ...categories].map(category => `
-        <button class="chip ${category === 'all' ? 'active' : ''}" data-cat="${esc(category)}">
-          ${esc(category === 'all' ? 'All' : category)}
-        </button>
-      `).join('');
-
-      categoryChipsEl.querySelectorAll('[data-cat]').forEach(chip => {
-        chip.addEventListener('click', () => {
-          categoryFilter.value = chip.dataset.cat;
-          setActiveChip(chip.dataset.cat);
-          runFilters();
-        });
-      });
-    }
-
-    function setActiveChip(value) {
-      categoryChipsEl.querySelectorAll('[data-cat]').forEach(chip => {
-        chip.classList.toggle('active', chip.dataset.cat === value);
-      });
-    }
-
-    function buildActiveFilters(search, category, audience, totalShown) {
-      const pills = [];
-
-      if (search) pills.push(`Search: ${search}`);
-      if (category !== 'all') pills.push(`Category: ${category}`);
-      if (audience !== 'all') pills.push(`Best for: ${audience}`);
-
-      activeFiltersEl.innerHTML = pills.map(label => `
-        <span class="filter-pill">${esc(label)}</span>
-      `).join('');
-
-      resultCountEl.textContent = `${totalShown} tool${totalShown === 1 ? '' : 's'} found`;
-    }
-
-    function buildToolCard(tool) {
-      const keywords = tool.keywords
-        .split(',')
-        .map(k => k.trim())
-        .filter(Boolean)
-        .slice(0, 6)
-        .map(k => `<span class="keyword">${esc(k)}</span>`)
-        .join('');
-
-      const visitButton = isRealUrl(tool.website)
-        ? `<a class="tool-link" href="${esc(tool.website)}" target="_blank" rel="noopener noreferrer">Visit tool</a>`
-        : `<button class="tool-link secondary" type="button" disabled>Link unavailable</button>`;
-
-      return `
-        <article class="tool-card">
-          <div class="tool-card-top">
-            <div>
-              <h4>${esc(tool.toolName)}</h4>
-            </div>
-            <span class="badge">${esc(tool.category)}</span>
-          </div>
-
-          <p class="tool-desc">${esc(tool.whatItDoes)}</p>
-
-          <div class="tool-info">
-            <div class="tool-info-row"><strong>Best for:</strong> ${esc(tool.bestFor || '—')}</div>
-            <div class="tool-info-row"><strong>Free plan:</strong> ${esc(tool.freePlanDetails || '—')}</div>
-          </div>
-
-          <div class="keyword-list">${keywords || '<span class="keyword">No keywords</span>'}</div>
-
-          <div class="tool-actions">
-            ${visitButton}
-          </div>
-        </article>
-      `;
-    }
-
-    function renderTools(list) {
-      if (!list.length) {
-        resultsEl.innerHTML = `
-          <div class="empty-state">
-            <h3 style="margin-bottom:8px;color:var(--text);">No tools found</h3>
-            <p>Try a different keyword or clear the active filters.</p>
-          </div>
-        `;
-        return;
-      }
-
-      resultsEl.innerHTML = `
-        <div class="results-grid">
-          ${list.map(buildToolCard).join('')}
-        </div>
-      `;
-    }
-
-    function runFilters() {
-      const search = searchInput.value.trim();
-      const category = categoryFilter.value;
-      const audience = bestForFilter.value;
-
-      let filtered = search
-        ? fuse.search(search).map(result => result.item)
-        : [...tools];
-
-      if (category !== 'all') {
-        filtered = filtered.filter(tool => tool.category === category);
-      }
-
-      if (audience !== 'all') {
-        filtered = filtered.filter(tool =>
-          tool.bestFor.toLowerCase().includes(audience.toLowerCase())
-        );
-      }
-
-      buildActiveFilters(search, category, audience, filtered.length);
-      renderTools(filtered);
-    }
-
-    function resetAllFilters() {
-      searchInput.value = '';
-      categoryFilter.value = 'all';
-      bestForFilter.value = 'all';
-      setActiveChip('all');
-      buildActiveFilters('', 'all', 'all', tools.length);
-      renderTools(tools);
-    }
-
-    themeToggle.addEventListener('click', toggleTheme);
-    searchFocusBtn.addEventListener('click', () => searchInput.focus());
-
-    clearAllBtn.addEventListener('click', resetAllFilters);
-    sidebarResetBtn.addEventListener('click', resetAllFilters);
-
-    searchInput.addEventListener('input', runFilters);
-    categoryFilter.addEventListener('change', () => {
-      setActiveChip(categoryFilter.value);
-      runFilters();
-    });
-    bestForFilter.addEventListener('change', runFilters);
-
-    document.addEventListener('keydown', event => {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
-        event.preventDefault();
-        searchInput.focus();
-        searchInput.select();
-      }
-    });
-
-    setInitialTheme();
-    loadTools();
-  </script>
+loadData();
+</script>
 </body>
 </html>
