@@ -1,0 +1,156 @@
+{
+  "total": 15,
+  "lastUpdated": "2026-05-04T00:00:00.000Z",
+  "data": [
+    {
+      "ID": "1",
+      "Category": "Writing & Content",
+      "Tool Name": "ChatGPT",
+      "Website": "https://chat.openai.com",
+      "What It Does": "AI chatbot for writing, coding, brainstorming, and answering questions",
+      "Best For": "Students, Developers, Content Creators",
+      "Free Plan Details": "Free to use with GPT-4o mini",
+      "Keywords": "chatbot, writing, coding, ai assistant, openai"
+    },
+    {
+      "ID": "2",
+      "Category": "Image Generation",
+      "Tool Name": "Leonardo AI",
+      "Website": "https://leonardo.ai",
+      "What It Does": "Create stunning AI-generated images and art from text prompts",
+      "Best For": "Designers, Marketers, Artists",
+      "Free Plan Details": "150 image generations per day",
+      "Keywords": "image, art, generation, design, photos"
+    },
+    {
+      "ID": "3",
+      "Category": "Code Assistant",
+      "Tool Name": "GitHub Copilot",
+      "Website": "https://github.com/features/copilot",
+      "What It Does": "AI pair programmer that suggests code completions in real time",
+      "Best For": "Developers, Students, Engineers",
+      "Free Plan Details": "2000 code completions per month free",
+      "Keywords": "code, programming, developer, autocomplete, github"
+    },
+    {
+      "ID": "4",
+      "Category": "Research & Search",
+      "Tool Name": "Perplexity AI",
+      "Website": "https://perplexity.ai",
+      "What It Does": "AI-powered search engine with cited sources and summaries",
+      "Best For": "Researchers, Students, Professionals",
+      "Free Plan Details": "Unlimited searches on free plan",
+      "Keywords": "search, research, answers, citations, knowledge"
+    },
+    {
+      "ID": "5",
+      "Category": "Video Generation",
+      "Tool Name": "Pika Labs",
+      "Website": "https://pika.art",
+      "What It Does": "Generate short videos from text prompts and images",
+      "Best For": "Content Creators, Marketers, Designers",
+      "Free Plan Details": "30 video generations per month",
+      "Keywords": "video, animation, generation, content, media"
+    },
+    {
+      "ID": "6",
+      "Category": "Audio & Voice",
+      "Tool Name": "ElevenLabs",
+      "Website": "https://elevenlabs.io",
+      "What It Does": "AI voice cloning and text-to-speech with realistic human voices",
+      "Best For": "Content Creators, Podcasters, Developers",
+      "Free Plan Details": "10000 characters per month free",
+      "Keywords": "voice, audio, text to speech, clone, narration"
+    },
+    {
+      "ID": "7",
+      "Category": "Productivity",
+      "Tool Name": "Notion AI",
+      "Website": "https://notion.so",
+      "What It Does": "AI writing assistant inside Notion for notes, docs, and wikis",
+      "Best For": "Students, Teams, Professionals",
+      "Free Plan Details": "Limited AI responses on free plan",
+      "Keywords": "notes, productivity, writing, organization, wiki"
+    },
+    {
+      "ID": "8",
+      "Category": "AI Agents",
+      "Tool Name": "Make.com",
+      "Website": "https://make.com",
+      "What It Does": "No-code automation platform to build AI-powered workflows and bots",
+      "Best For": "Business Owners, Marketers, Developers",
+      "Free Plan Details": "1000 operations per month free",
+      "Keywords": "automation, workflow, no-code, integration, bots"
+    },
+    {
+      "ID": "9",
+      "Category": "Design & UI",
+      "Tool Name": "Canva AI",
+      "Website": "https://canva.com",
+      "What It Does": "AI-powered design tool for graphics, presentations, and social media",
+      "Best For": "Marketers, Designers, Small Business",
+      "Free Plan Details": "Basic AI features free forever",
+      "Keywords": "design, graphics, presentation, social media, templates"
+    },
+    {
+      "ID": "10",
+      "Category": "Data & Analytics",
+      "Tool Name": "Google Colab",
+      "Website": "https://colab.research.google.com",
+      "What It Does": "Free cloud Jupyter notebook with GPU access for data science and ML",
+      "Best For": "Data Scientists, Researchers, Students",
+      "Free Plan Details": "Free GPU and TPU runtime with usage limits",
+      "Keywords": "python, data science, machine learning, notebook, gpu"
+    },
+    {
+      "ID": "11",
+      "Category": "Writing & Content",
+      "Tool Name": "Claude",
+      "Website": "https://claude.ai",
+      "What It Does": "AI assistant by Anthropic for writing, analysis, and long documents",
+      "Best For": "Writers, Analysts, Developers",
+      "Free Plan Details": "Limited conversations on free tier",
+      "Keywords": "writing, analysis, coding, ai assistant, anthropic"
+    },
+    {
+      "ID": "12",
+      "Category": "Image Generation",
+      "Tool Name": "Ideogram",
+      "Website": "https://ideogram.ai",
+      "What It Does": "AI image generator with excellent text inside image capabilities",
+      "Best For": "Designers, Marketers, Content Creators",
+      "Free Plan Details": "25 image generations per day free",
+      "Keywords": "image, text, logo, poster, generation"
+    },
+    {
+      "ID": "13",
+      "Category": "Code Assistant",
+      "Tool Name": "Replit AI",
+      "Website": "https://replit.com",
+      "What It Does": "AI coding assistant inside an online IDE — build and run code in browser",
+      "Best For": "Students, Beginners, Developers",
+      "Free Plan Details": "Basic AI features on free plan",
+      "Keywords": "code, ide, online, programming, learn"
+    },
+    {
+      "ID": "14",
+      "Category": "Research & Search",
+      "Tool Name": "Gemini",
+      "Website": "https://gemini.google.com",
+      "What It Does": "Google AI assistant for search, writing, coding, and multimodal tasks",
+      "Best For": "Students, Professionals, General Users",
+      "Free Plan Details": "Unlimited Gemini 1.5 Flash usage free",
+      "Keywords": "google, search, writing, multimodal, assistant"
+    },
+    {
+      "ID": "15",
+      "Category": "Audio & Voice",
+      "Tool Name": "Suno",
+      "Website": "https://suno.ai",
+      "What It Does": "AI music generator that creates full songs from text descriptions",
+      "Best For": "Musicians, Content Creators, Hobbyists",
+      "Free Plan Details": "10 songs per day free",
+      "Keywords": "music, song, audio, generation, creator"
+    }
+  ]
+}
