@@ -1,209 +1,298 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Tools Directory</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --color-bg: #f5f5f5; --color-sidebar-bg: #ffffff; --color-content-bg: #ffffff;
-  --color-border: #e5e5e5; --color-text: #1a1a1a; --color-text-muted: #666;
-  --color-text-faint: #999; --color-primary: #2563eb; --color-primary-light: #eff6ff;
-  --color-active-item: #eff6ff; --color-active-text: #2563eb;
-  --color-header-bg: #1e40af; --sidebar-width: 280px; --header-height: 50px;
-  font-family: "Inter", sans-serif; font-size: 14px; color: var(--color-text);
-}
-[data-theme="dark"] {
-  --color-bg: #111; --color-sidebar-bg: #1a1a1a; --color-content-bg: #1a1a1a;
-  --color-border: #2a2a2a; --color-text: #e5e5e5; --color-text-muted: #999;
-  --color-text-faint: #555; --color-primary: #3b82f6; --color-primary-light: #1e3a5f;
-  --color-active-item: #1e3a5f; --color-active-text: #60a5fa;
-  --color-header-bg: #1e293b;
-}
-body { background:var(--color-bg); height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
-.top-header { background:var(--color-header-bg); color:#fff; height:var(--header-height); display:flex; align-items:center; padding:0 16px; gap:10px; flex-shrink:0; border-bottom:1px solid rgba(255,255,255,0.1); }
-.top-header h1 { font-size:15px; font-weight:600; }
-.header-right { margin-left:auto; }
-.theme-toggle { background:rgba(255,255,255,0.15); border:none; color:#fff; width:30px; height:30px; border-radius:6px; cursor:pointer; font-size:14px; transition:background 0.15s; }
-.theme-toggle:hover { background:rgba(255,255,255,0.25); }
-.app-body { display:flex; flex:1; overflow:hidden; }
-.sidebar { width:var(--sidebar-width); background:var(--color-sidebar-bg); border-right:1px solid var(--color-border); display:flex; flex-direction:column; flex-shrink:0; overflow:hidden; }
-.sidebar-search { padding:10px 12px; border-bottom:1px solid var(--color-border); }
-.sidebar-search input { width:100%; background:var(--color-bg); border:1px solid var(--color-border); border-radius:6px; padding:6px 10px 6px 30px; font-size:13px; color:var(--color-text); outline:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:8px center; transition:border-color 0.15s; }
-.sidebar-search input:focus { border-color:var(--color-primary); }
-.sidebar-search input::placeholder { color:var(--color-text-faint); }
-.sidebar-nav { flex:1; overflow-y:auto; padding:8px 0; }
-.sidebar-nav::-webkit-scrollbar { width:4px; }
-.sidebar-nav::-webkit-scrollbar-thumb { background:var(--color-border); border-radius:2px; }
-.category-header { display:flex; align-items:center; gap:8px; padding:6px 12px; cursor:pointer; user-select:none; transition:background 0.1s; }
-.category-header:hover { background:var(--color-bg); }
-.category-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-.category-title { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-text-muted); flex:1; }
-.category-count { font-size:11px; color:var(--color-text-faint); background:var(--color-bg); padding:1px 6px; border-radius:10px; border:1px solid var(--color-border); }
-.category-arrow { color:var(--color-text-faint); font-size:9px; transition:transform 0.15s; }
-.category-group.open .category-arrow { transform:rotate(90deg); }
-.tool-list { display:none; padding:2px 0; }
-.category-group.open .tool-list { display:block; }
-.tool-item { display:flex; align-items:center; gap:8px; padding:6px 12px 6px 24px; cursor:pointer; transition:background 0.1s; border-left:2px solid transparent; }
-.tool-item:hover { background:var(--color-bg); }
-.tool-item.active { background:var(--color-active-item); border-left-color:var(--color-primary); }
-.tool-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
-.tool-name { font-size:13px; color:var(--color-text); flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.tool-item.active .tool-name { color:var(--color-active-text); font-weight:500; }
-.main-content { flex:1; overflow-y:auto; background:var(--color-bg); display:flex; flex-direction:column; }
-.main-content::-webkit-scrollbar { width:6px; }
-.main-content::-webkit-scrollbar-thumb { background:var(--color-border); border-radius:3px; }
-.welcome-screen { flex:1; display:flex; align-items:center; justify-content:center; }
-.welcome-card { background:var(--color-content-bg); border:1px solid var(--color-border); border-radius:12px; padding:40px 48px; text-align:center; max-width:380px; }
-.welcome-emoji { font-size:32px; margin-bottom:12px; }
-.welcome-card h2 { font-size:18px; font-weight:600; margin-bottom:8px; }
-.welcome-card p { font-size:13px; color:var(--color-text-muted); }
-.tool-detail { display:none; flex:1; flex-direction:column; }
-.tool-detail.visible { display:flex; }
-.detail-header { background:var(--color-content-bg); border-bottom:1px solid var(--color-border); padding:16px 24px; display:flex; align-items:center; gap:10px; }
-.detail-header h2 { font-size:17px; font-weight:600; }
-.detail-cat-badge { font-size:11px; font-weight:500; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:0.04em; }
-.detail-body { padding:20px 24px; display:flex; flex-direction:column; gap:12px; }
-.info-card { background:var(--color-content-bg); border:1px solid var(--color-border); border-radius:8px; padding:14px 18px; }
-.info-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:var(--color-text-faint); margin-bottom:5px; }
-.info-value { font-size:13px; color:var(--color-text); line-height:1.6; }
-.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-.free-plan-card { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:14px 18px; }
-[data-theme="dark"] .free-plan-card { background:#052e16; border-color:#166534; }
-.free-plan-card .info-label { color:#166534; }
-[data-theme="dark"] .free-plan-card .info-label { color:#4ade80; }
-.free-plan-card .info-value { color:#15803d; }
-[data-theme="dark"] .free-plan-card .info-value { color:#86efac; }
-.best-for-badge { display:inline-flex; align-items:center; gap:6px; border-radius:6px; padding:5px 10px; font-size:13px; font-weight:500; }
-.keywords-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
-.keyword-tag { background:var(--color-bg); border:1px solid var(--color-border); border-radius:4px; padding:2px 8px; font-size:11px; color:var(--color-text-muted); }
-.loading-state, .no-results { text-align:center; padding:40px 16px; color:var(--color-text-muted); font-size:13px; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f0f0f0;height:100vh;display:flex;flex-direction:column;overflow:hidden;color:#1a1a1a}
+.header{background:#2c3fd1;color:#fff;height:50px;display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0}
+.header h1{font-size:15px;font-weight:600}
+.body{display:flex;flex:1;overflow:hidden}
+.sidebar{width:270px;background:#fff;border-right:1px solid #e0e0e0;display:flex;flex-direction:column;flex-shrink:0}
+.search-box{padding:10px;border-bottom:1px solid #e0e0e0}
+.search-box input{width:100%;border:1px solid #ddd;border-radius:6px;padding:7px 10px 7px 30px;font-size:13px;outline:none;font-family:inherit;background:#f8f8f8;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:9px center}
+.nav{flex:1;overflow-y:auto;padding:6px 0}
+.nav::-webkit-scrollbar{width:4px}
+.nav::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+.cat-header{display:flex;align-items:center;gap:7px;padding:5px 10px;cursor:pointer;user-select:none}
+.cat-header:hover{background:#f5f5f5}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ctitle{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#777;flex:1}
+.ccount{font-size:10px;color:#aaa;background:#f0f0f0;padding:1px 5px;border-radius:8px;border:1px solid #e0e0e0}
+.carrow{color:#bbb;font-size:9px;transition:transform .15s}
+.cat-group.open .carrow{transform:rotate(90deg)}
+.tool-list{display:none}
+.cat-group.open .tool-list{display:block}
+.tool-item{display:flex;align-items:center;gap:7px;padding:5px 10px 5px 22px;cursor:pointer;border-left:2px solid transparent}
+.tool-item:hover{background:#f5f5f5}
+.tool-item.active{background:#eff3ff;border-left-color:#2c3fd1}
+.tdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.tname{font-size:13px;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tool-item.active .tname{color:#2c3fd1;font-weight:500}
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.main::-webkit-scrollbar{width:6px}
+.main::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px}
+.welcome{flex:1;display:flex;align-items:center;justify-content:center}
+.welcome-box{background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:40px;text-align:center;max-width:360px}
+.welcome-box .emoji{font-size:30px;margin-bottom:10px}
+.welcome-box h2{font-size:17px;font-weight:600;margin-bottom:6px}
+.welcome-box p{font-size:13px;color:#888}
+.detail{display:none;flex:1;flex-direction:column}
+.detail.show{display:flex}
+.dheader{background:#fff;border-bottom:1px solid #e0e0e0;padding:14px 20px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.dheader h2{font-size:16px;font-weight:600}
+.dbadge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em}
+.dbody{padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.card{background:#fff;border:1px solid #e0e0e0;border-radius:8px;padding:13px 16px}
+.lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#aaa;margin-bottom:4px}
+.val{font-size:13px;line-height:1.6;color:#333}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.free-card{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:13px 16px}
+.free-card .lbl{color:#16a34a}
+.free-card .val{color:#15803d}
+.best-tag{display:inline-block;padding:4px 10px;border-radius:6px;font-size:13px;font-weight:500}
+.kw-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+.kw{background:#f5f5f5;border:1px solid #e0e0e0;border-radius:4px;padding:2px 7px;font-size:11px;color:#777}
+.no-results{text-align:center;padding:30px;color:#aaa;font-size:13px}
 </style>
 </head>
 <body>
-<header class="top-header">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+
+<div class="header">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+    <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+    <rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>
+  </svg>
   <h1>AI Tools Directory</h1>
-  <div class="header-right">
-    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
-  </div>
-</header>
-<div class="app-body">
-  <aside class="sidebar">
-    <div class="sidebar-search">
-      <input type="text" id="searchInput" placeholder="Search tools..." oninput="handleSearch(this.value)">
+</div>
+
+<div class="body">
+  <div class="sidebar">
+    <div class="search-box">
+      <input type="text" placeholder="Search tools..." oninput="doSearch(this.value)">
     </div>
-    <nav class="sidebar-nav" id="sidebarNav">
-      <div class="loading-state">Loading tools...</div>
-    </nav>
-  </aside>
-  <main class="main-content" id="mainContent">
-    <div class="welcome-screen" id="welcomeScreen">
-      <div class="welcome-card">
-        <div class="welcome-emoji">👋</div>
+    <div class="nav" id="nav"></div>
+  </div>
+
+  <div class="main">
+    <div class="welcome" id="welcome">
+      <div class="welcome-box">
+        <div class="emoji">👋</div>
         <h2>Welcome to AI Tools Directory</h2>
-        <p>Select a tool from the left to view its details and free plan info.</p>
+        <p>Select a tool from the left to see its details.</p>
       </div>
     </div>
-    <div class="tool-detail" id="toolDetail"></div>
-  </main>
+    <div class="detail" id="detail"></div>
+  </div>
 </div>
+
 <script>
-const DATA_URL='https://script.google.com/macros/s/AKfycbzLz-K0pkz4PGCDqszApIQh7xU8xEw2v5V4zjX1R0uVIIyg9-SxJFkNRR7qXJ6SGmEV/exec';
-const CAT_COLORS={'Image Generation':'#8b5cf6','Video Generation':'#ef4444','Audio & Voice':'#f59e0b','Writing & Content':'#10b981','Code Assistant':'#3b82f6','AI Agents':'#ec4899','Productivity':'#06b6d4','Research & Search':'#84cc16','Data & Analytics':'#f97316','Design & UI':'#a855f7'};
-let allTools=[];
+// ==== DATA (saara yahan hardcoded hai) ====
+var TOOLS = [
+  {"ID":"1","Category":"Image Generation","Tool Name":"Leonardo.ai","What It Does":"An all-in-one AI image generation platform for creating high-quality art and assets.","Best For":"Content Creators","Free Plan Details":"150 free tokens per day that reset every 24 hours.","Keywords":"AI art, image gen, stable diffusion, Leonardo, prompt art"},
+  {"ID":"2","Category":"Image Generation","Tool Name":"Bing Image Creator","What It Does":"Generates high-quality images from text descriptions using OpenAI's DALL-E 3.","Best For":"Students","Free Plan Details":"Completely free to use with 15 \"boosts\" per day for faster generation.","Keywords":"DALL-E 3, Microsoft AI, free image gen, text to image, AI photos"},
+  {"ID":"3","Category":"Image Generation","Tool Name":"Playground AI","What It Does":"A web-based AI image creator that allows for mixed image editing and creation.","Best For":"Content Creators","Free Plan Details":"Generate up to 50 images per day for free with a commercial license.","Keywords":"Playground, AI editor, image generation, free stable diffusion, AI art"},
+  {"ID":"4","Category":"Image Generation","Tool Name":"Lexica.art","What It Does":"A search engine and generator for AI images based on the Stable Diffusion model.","Best For":"Designers","Free Plan Details":"Offers a limited number of free generations per month for personal use.","Keywords":"Lexica, AI search, Stable Diffusion, prompt engineering, art search"},
+  {"ID":"5","Category":"Image Generation","Tool Name":"Adobe Firefly","What It Does":"Adobe's family of creative generative AI models for text-to-image and text effects.","Best For":"Designers","Free Plan Details":"Provides 25 monthly generative credits for free to all Adobe ID holders.","Keywords":"Adobe AI, Firefly, generative fill, AI text effects, Photoshop AI"},
+  {"ID":"6","Category":"Image Generation","Tool Name":"SeaArt.ai","What It Does":"A powerful AI art generator with a massive library of models and tools.","Best For":"Content Creators","Free Plan Details":"Offers daily free credits (approx. 150) for image generation and model training.","Keywords":"SeaArt, Civitai alternative, AI anime, Stable Diffusion web, AI art"},
+  {"ID":"7","Category":"Image Generation","Tool Name":"Krea AI","What It Does":"A real-time AI creative tool for generating images and enhancing visuals instantly.","Best For":"Designers","Free Plan Details":"Provides a free tier with daily usage limits for real-time generation and upscaling.","Keywords":"Krea, real time AI, AI upscale, creative AI, live generation"},
+  {"ID":"8","Category":"Image Generation","Tool Name":"Tensor.art","What It Does":"An online platform for hosting and generating images using diverse Stable Diffusion models.","Best For":"Content Creators","Free Plan Details":"Daily free credits for generating images using various community-contributed models.","Keywords":"Tensor, AI model hosting, Stable Diffusion, LoRA generation, AI art"},
+  {"ID":"9","Category":"Image Generation","Tool Name":"DreamStudio","What It Does":"The official web interface for Stable Diffusion models by Stability AI.","Best For":"Artists","Free Plan Details":"New accounts receive a set of free credits to start generating images.","Keywords":"Stability AI, Stable Diffusion, DreamStudio, AI art tool, official SD"},
+  {"ID":"10","Category":"Image Generation","Tool Name":"Pollinations.ai","What It Does":"An open-source platform that generates media through a distributed network of AI.","Best For":"Developers","Free Plan Details":"Completely free and open-source for generating images via API or web interface.","Keywords":"Open source AI, Pollinations, free image API, AI art, decentralized AI"},
+  {"ID":"11","Category":"Video Generation","Tool Name":"Runway","What It Does":"A professional-grade AI video editor and generator for high-end video effects.","Best For":"Content Creators","Free Plan Details":"Offers 125 one-time free credits to explore Gen-1 and Gen-2 video features.","Keywords":"RunwayML, Gen-2, AI video, text to video, video editing"},
+  {"ID":"12","Category":"Video Generation","Tool Name":"Pika Labs","What It Does":"An AI-powered tool for generating short, high-quality videos and animations from text.","Best For":"Marketers","Free Plan Details":"Offers a free daily credit system for generating and extending videos.","Keywords":"Pika, video generation, text to video, AI animation, Pika art"},
+  {"ID":"13","Category":"Video Generation","Tool Name":"Luma Dream Machine","What It Does":"A high-fidelity video generator that creates realistic cinematic shots from text or images.","Best For":"Content Creators","Free Plan Details":"Provides 30 free video generations per month for all users.","Keywords":"Luma AI, Dream Machine, realistic AI video, cinematic AI, video gen"},
+  {"ID":"14","Category":"Video Generation","Tool Name":"Kling AI","What It Does":"A powerful video generation model capable of creating long, high-definition videos.","Best For":"Content Creators","Free Plan Details":"Offers daily login credits (66 credits) which can be used for video generation.","Keywords":"Kling, high res video, AI filmmaking, Chinese AI, video synthesis"},
+  {"ID":"15","Category":"Video Generation","Tool Name":"InVideo AI","What It Does":"An AI video creator that turns ideas into complete videos with scripts and voiceovers.","Best For":"Marketers","Free Plan Details":"Free plan includes 10 minutes of AI video generation per week with watermarks.","Keywords":"InVideo, YouTube automation, AI video maker, script to video, video marketing"},
+  {"ID":"16","Category":"Video Generation","Tool Name":"HeyGen","What It Does":"A platform for creating realistic AI avatars and video translations.","Best For":"Business Owners","Free Plan Details":"Free trial includes 1 free credit (equivalent to 1 minute of video).","Keywords":"HeyGen, AI avatar, video translation, talking head, AI spokesperson"},
+  {"ID":"17","Category":"Video Generation","Tool Name":"Fliki","What It Does":"Turns blog posts and scripts into videos with AI voices and stock media.","Best For":"Marketers","Free Plan Details":"Free plan allows 5 minutes of monthly credits with Fliki watermarks.","Keywords":"Fliki, blog to video, AI voiceover, social media video, video creator"},
+  {"ID":"18","Category":"Video Generation","Tool Name":"Kaiber","What It Does":"An AI creative lab designed for music videos and artistic animations.","Best For":"Content Creators","Free Plan Details":"Offers a 7-day free trial with 10 credits to test video generation.","Keywords":"Kaiber, AI music video, animation, artistic video, video transformation"},
+  {"ID":"19","Category":"Video Generation","Tool Name":"Synthesia","What It Does":"A leader in AI video generation using digital avatars for corporate training.","Best For":"Business Owners","Free Plan Details":"Provides a free demo to create a single video with a pre-selected avatar.","Keywords":"Synthesia, corporate video, AI training, digital avatar, professional video"},
+  {"ID":"20","Category":"Video Generation","Tool Name":"DeepBrain AI","What It Does":"Creates realistic AI human videos for presentations and tutorials.","Best For":"Business Owners","Free Plan Details":"Offers a free trial video where you can input text for an avatar to speak.","Keywords":"DeepBrain, AI human, presentation AI, video tutorial, digital twin"},
+  {"ID":"21","Category":"Audio & Voice","Tool Name":"ElevenLabs","What It Does":"The most advanced AI text-to-speech and voice cloning software.","Best For":"Content Creators","Free Plan Details":"Free plan offers 10,000 characters per month and attribution is required.","Keywords":"ElevenLabs, voice cloning, text to speech, AI voice, narrations"},
+  {"ID":"22","Category":"Audio & Voice","Tool Name":"Suno AI","What It Does":"An AI that generates complete songs including lyrics, melody, and vocals.","Best For":"Content Creators","Free Plan Details":"Basic plan is free with 50 credits per day (resets daily, 10 songs).","Keywords":"Suno, AI music, song generator, lyrics AI, music composition"},
+  {"ID":"23","Category":"Audio & Voice","Tool Name":"Udio","What It Does":"A high-fidelity music generation tool that creates professional-sounding tracks.","Best For":"Content Creators","Free Plan Details":"Offers a generous free beta plan with hundreds of credits per month.","Keywords":"Udio, music AI, track generator, high quality music, song maker"},
+  {"ID":"24","Category":"Audio & Voice","Tool Name":"Murf AI","What It Does":"A versatile AI voice generator for podcasts, videos, and presentations.","Best For":"Marketers","Free Plan Details":"Free version allows for 10 mins of voice generation and transcription (no downloads).","Keywords":"Murf, voiceover, podcast AI, text to voice, professional audio"},
+  {"ID":"25","Category":"Audio & Voice","Tool Name":"Speechify","What It Does":"A text-to-speech tool that converts any document or web page into natural audio.","Best For":"Students","Free Plan Details":"Free plan includes 10 standard voices and basic listening speeds.","Keywords":"Speechify, read aloud, text to speech, audiobook, study tool"},
+  {"ID":"26","Category":"Audio & Voice","Tool Name":"Voicemaker","What It Does":"An online text-to-speech converter with a wide variety of voice options.","Best For":"Content Creators","Free Plan Details":"Free plan allows for 250 characters per conversion and limited daily usage.","Keywords":"Voicemaker, TTS, AI audio, voice converter, free voiceover"},
+  {"ID":"27","Category":"Audio & Voice","Tool Name":"Krisp","What It Does":"AI-powered noise cancellation software for online meetings and calls.","Best For":"Business Owners","Free Plan Details":"Free plan provides 60 minutes of noise cancellation per day.","Keywords":"Krisp, noise cancellation, meeting AI, clear voice, remote work"},
+  {"ID":"28","Category":"Audio & Voice","Tool Name":"Adobe Podcast","What It Does":"AI tools for enhancing audio recordings and removing background noise.","Best For":"Content Creators","Free Plan Details":"\"Enhance Speech\" tool is currently free to use with daily limits.","Keywords":"Adobe Podcast, audio cleanup, noise removal, mic enhancement, podcast tool"},
+  {"ID":"29","Category":"Audio & Voice","Tool Name":"Voicemod","What It Does":"Real-time AI voice changer and soundboard for gaming and streaming.","Best For":"Content Creators","Free Plan Details":"Offers a free version with a rotating selection of daily voices.","Keywords":"Voicemod, voice changer, real time voice, soundboard, gaming AI"},
+  {"ID":"30","Category":"Audio & Voice","Tool Name":"Kits.ai","What It Does":"An AI voice platform for musicians to use licensed artist voices or clone their own.","Best For":"Content Creators","Free Plan Details":"Free tier allows for testing voice models and basic audio conversions.","Keywords":"Kits, music AI, voice conversion, artist voices, AI singing"},
+  {"ID":"31","Category":"Writing & Content","Tool Name":"ChatGPT","What It Does":"OpenAI's versatile AI assistant for writing, coding, and general information.","Best For":"Students","Free Plan Details":"Free access to GPT-4o mini and limited access to GPT-4o for all users.","Keywords":"ChatGPT, OpenAI, AI chatbot, writing assistant, AI search"},
+  {"ID":"32","Category":"Writing & Content","Tool Name":"Claude","What It Does":"Anthropic's AI focused on safe, helpful, and nuanced conversations and writing.","Best For":"Developers","Free Plan Details":"Free access to Claude 3.5 Sonnet via web interface with daily limits.","Keywords":"Claude, Anthropic, long context, AI writing, ethical AI"},
+  {"ID":"33","Category":"Writing & Content","Tool Name":"Gemini","What It Does":"Google's most capable AI for reasoning, coding, and multi-modal tasks.","Best For":"Students","Free Plan Details":"Free version provides access to Gemini Flash and Pro models integrated with Google.","Keywords":"Gemini, Google AI, Bard, AI assistant, search AI"},
+  {"ID":"34","Category":"Writing & Content","Tool Name":"Copy.ai","What It Does":"An AI copywriting tool for marketing, social media, and business emails.","Best For":"Marketers","Free Plan Details":"Free plan includes 2,000 words per month and 1 user seat.","Keywords":"Copy.ai, copywriting, marketing AI, content gen, email assistant"},
+  {"ID":"35","Category":"Writing & Content","Tool Name":"Writesonic","What It Does":"An AI writing tool optimized for SEO-friendly blogs and marketing copy.","Best For":"Marketers","Free Plan Details":"Free plan offers 25 credits per month for various AI writing tools.","Keywords":"Writesonic, SEO writing, blog generator, AI content, marketing tool"},
+  {"ID":"36","Category":"Writing & Content","Tool Name":"Quillbot","What It Does":"An AI paraphrasing and grammar checking tool to improve writing clarity.","Best For":"Students","Free Plan Details":"Free plan includes 125 words in Paraphraser and standard modes.","Keywords":"Quillbot, paraphrasing, grammar check, writing tool, rewrite"},
+  {"ID":"37","Category":"Writing & Content","Tool Name":"Grammarly","What It Does":"An AI writing assistant that checks grammar, spelling, and tone.","Best For":"Students","Free Plan Details":"Free version provides basic suggestions for grammar, spelling, and punctuation.","Keywords":"Grammarly, grammar checker, spell check, writing assistant, tone check"},
+  {"ID":"38","Category":"Writing & Content","Tool Name":"Hemingway Editor","What It Does":"A writing tool that highlights complex sentences and improves readability.","Best For":"Content Creators","Free Plan Details":"The web-based version is completely free for analyzing and editing text.","Keywords":"Hemingway, readability, writing style, editing tool, clear writing"},
+  {"ID":"40","Category":"Writing & Content","Tool Name":"Rytr","What It Does":"An affordable AI writing assistant for creating high-quality content.","Best For":"Content Creators","Free Plan Details":"Free plan allows you to generate up to 10,000 characters per month.","Keywords":"Rytr, content generator, writing AI, free writing tool, AI copy"},
+  {"ID":"41","Category":"Writing & Content","Tool Name":"Jasper","What It Does":"A high-end AI content platform for enterprise teams and marketing.","Best For":"Business Owners","Free Plan Details":"Offers a 7-day free trial with full access to test its capabilities.","Keywords":"Jasper, AI marketing, content strategy, enterprise AI, business writing"},
+  {"ID":"42","Category":"Code Assistant","Tool Name":"Cursor","What It Does":"An AI-native code editor built on top of VS Code for accelerated programming.","Best For":"Developers","Free Plan Details":"Free tier allows for limited high-quality AI completions and chat.","Keywords":"Cursor, AI editor, VS Code AI, coding assistant, IDE"},
+  {"ID":"43","Category":"Code Assistant","Tool Name":"Blackbox AI","What It Does":"A specialized AI for code generation, documentation, and error fixing.","Best For":"Developers","Free Plan Details":"Offers a generous free tier for chat, code search, and generation.","Keywords":"Blackbox, code gen, AI developer, programming search, code assistant"},
+  {"ID":"44","Category":"Code Assistant","Tool Name":"Codeium","What It Does":"A free, high-performance AI code completion tool for over 70 languages.","Best For":"Developers","Free Plan Details":"Individual plan is free forever with unlimited completions and chat.","Keywords":"Codeium, Copilot free, code completion, AI extension, programming"},
+  {"ID":"45","Category":"Code Assistant","Tool Name":"Amazon Q Developer","What It Does":"Amazon's AI assistant for building, debugging, and optimizing code on AWS and beyond.","Best For":"Developers","Free Plan Details":"Free tier (formerly CodeWhisperer) is available for individual developers.","Keywords":"Amazon Q, CodeWhisperer, AWS AI, code assistant, cloud coding"},
+  {"ID":"46","Category":"Code Assistant","Tool Name":"Phind","What It Does":"An AI search engine specifically designed for developers and coding questions.","Best For":"Developers","Free Plan Details":"Free to use for high-quality technical answers and code snippets.","Keywords":"Phind, developer search, AI coding, programming help, code search"},
+  {"ID":"47","Category":"Code Assistant","Tool Name":"Tabnine","What It Does":"An AI code assistant that focuses on privacy and secure code completion.","Best For":"Developers","Free Plan Details":"Starter plan is free and provides basic AI completions.","Keywords":"Tabnine, private AI, code completion, secure coding, AI extension"},
+  {"ID":"48","Category":"Code Assistant","Tool Name":"Replit Ghostwriter","What It Does":"AI features integrated into the Replit online IDE for coding help.","Best For":"Students","Free Plan Details":"Free accounts get limited access to AI features within the Replit environment.","Keywords":"Replit, online IDE, AI coding, collaborative coding, Ghostwriter"},
+  {"ID":"49","Category":"Code Assistant","Tool Name":"Warp AI","What It Does":"A modern, Rust-based terminal with integrated AI for command suggestions.","Best For":"Developers","Free Plan Details":"Free for individuals with a limited number of AI command requests per month.","Keywords":"Warp, AI terminal, command line, CLI AI, shell assistant"},
+  {"ID":"50","Category":"Code Assistant","Tool Name":"Sourcegraph Cody","What It Does":"An AI code assistant that knows your entire codebase through context.","Best For":"Developers","Free Plan Details":"Free for individual users with basic AI chat and completion features.","Keywords":"Cody, codebase AI, context coding, Sourcegraph, code assistant"},
+  {"ID":"51","Category":"Code Assistant","Tool Name":"Pieces for Developers","What It Does":"An AI-powered tool to save, enrich, and search code snippets across your workflow.","Best For":"Developers","Free Plan Details":"Core desktop app and AI features are free for individual developers.","Keywords":"Pieces, code snippets, AI workflow, dev tools, code management"},
+  {"ID":"52","Category":"AI Agents","Tool Name":"AgentGPT","What It Does":"A browser-based interface to deploy autonomous AI agents for tasks.","Best For":"Developers","Free Plan Details":"Offers a free tier for deploying a limited number of agents per day.","Keywords":"AgentGPT, AutoGPT, autonomous agents, task AI, AI planning"},
+  {"ID":"53","Category":"AI Agents","Tool Name":"Godmode.space","What It Does":"A web platform inspired by AutoGPT that allows you to run AI agents.","Best For":"Marketers","Free Plan Details":"Free to try with limited tasks using GPT-3.5 models.","Keywords":"Godmode, AutoGPT web, AI agent, task automation, autonomous AI"},
+  {"ID":"54","Category":"AI Agents","Tool Name":"HyperWrite Personal Assistant","What It Does":"An AI agent that can browse the web and perform tasks in your browser.","Best For":"Productivity","Free Plan Details":"Free tier includes a limited number of assistant credits per month.","Keywords":"HyperWrite, browser agent, AI assistant, task automation, personal AI"},
+  {"ID":"55","Category":"AI Agents","Tool Name":"Relevance AI","What It Does":"A platform to build and deploy custom AI agents and workflows for businesses.","Best For":"Business Owners","Free Plan Details":"Free tier includes limited runs for agents and tools.","Keywords":"Relevance, custom AI, agent builder, business automation, AI workflow"},
+  {"ID":"56","Category":"AI Agents","Tool Name":"Lindy.ai","What It Does":"An AI employee that can handle meetings, emails, and calendar management.","Best For":"Business Owners","Free Plan Details":"Offers a free version with limited \"Lindy\" interactions per month.","Keywords":"Lindy, AI employee, virtual assistant, calendar AI, meeting assistant"},
+  {"ID":"57","Category":"AI Agents","Tool Name":"SuperAGI","What It Does":"An open-source infrastructure to build, manage, and run autonomous agents.","Best For":"Developers","Free Plan Details":"Open-source version is free to self-host and use.","Keywords":"SuperAGI, agent framework, autonomous AI, open source AI, agent dev"},
+  {"ID":"58","Category":"AI Agents","Tool Name":"Cognition Devin (Demo)","What It Does":"The first \"AI Software Engineer\" capable of complex coding tasks.","Best For":"Developers","Free Plan Details":"Access is currently limited, but you can request a demo or trial.","Keywords":"Devin, AI engineer, automated coding, software agent, AI dev"},
+  {"ID":"59","Category":"AI Agents","Tool Name":"MultiOn","What It Does":"An AI agent that can act on the web, booking flights or ordering food.","Best For":"Productivity","Free Plan Details":"Offers a free tier or demo credits for web-based agent tasks.","Keywords":"MultiOn, web agent, AI action, automated browsing, task agent"},
+  {"ID":"60","Category":"AI Agents","Tool Name":"Induced AI","What It Does":"A browser-based AI worker that automates manual back-office tasks.","Best For":"Business Owners","Free Plan Details":"Offers limited free runs for automating browser-based workflows.","Keywords":"Induced, AI worker, back office AI, RPA AI, browser automation"},
+  {"ID":"61","Category":"AI Agents","Tool Name":"Beam AI","What It Does":"A platform for automating business workflows with intelligent AI agents.","Best For":"Business Owners","Free Plan Details":"Free plan includes limited automation runs for simple tasks.","Keywords":"Beam, business AI, workflow agent, automation, AI tasks"},
+  {"ID":"62","Category":"Productivity","Tool Name":"Notion AI","What It Does":"AI features integrated into Notion for summarization, writing, and editing.","Best For":"Students","Free Plan Details":"Offers a limited number of free AI responses for all users (approx. 20-40).","Keywords":"Notion, AI notes, productivity, wiki AI, writing assistant"},
+  {"ID":"63","Category":"Productivity","Tool Name":"Zapier","What It Does":"An automation tool that connects thousands of apps and includes AI features.","Best For":"Business Owners","Free Plan Details":"Free plan allows for 100 tasks per month and basic AI \"zaps\".","Keywords":"Zapier, automation, workflow, app connector, AI automation"},
+  {"ID":"64","Category":"Productivity","Tool Name":"Make.com","What It Does":"A visual automation platform to design and automate complex workflows.","Best For":"Business Owners","Free Plan Details":"Free plan includes 1,000 operations per month for various integrations.","Keywords":"Make, Integromat, visual automation, workflow design, AI integrations"},
+  {"ID":"65","Category":"Productivity","Tool Name":"Gamma","What It Does":"An AI-powered tool to create beautiful presentations, documents, and websites.","Best For":"Marketers","Free Plan Details":"Free plan includes 400 one-time AI credits for generation.","Keywords":"Gamma, AI presentation, slide deck, document AI, website builder"},
+  {"ID":"66","Category":"Productivity","Tool Name":"Tome","What It Does":"An AI storytelling platform for creating interactive presentations and narratives.","Best For":"Marketers","Free Plan Details":"Offers a free starter pack of credits to generate \"tomes\" and images.","Keywords":"Tome, storytelling AI, AI slides, presentation maker, creative AI"},
+  {"ID":"67","Category":"Productivity","Tool Name":"Otter.ai","What It Does":"An AI meeting assistant that records, transcribes, and summarizes meetings.","Best For":"Students","Free Plan Details":"Free plan includes 300 minutes of transcription per month (30 mins per conversation).","Keywords":"Otter, transcription, meeting notes, AI recording, speech to text"},
+  {"ID":"68","Category":"Productivity","Tool Name":"Fireflies.ai","What It Does":"An AI voice assistant that joins your meetings to take notes and transcribe.","Best For":"Business Owners","Free Plan Details":"Free tier includes limited transcription credits and summary features.","Keywords":"Fireflies, meeting assistant, note taker, AI transcription, CRM AI"},
+  {"ID":"69","Category":"Productivity","Tool Name":"Taskade","What It Does":"An AI-powered productivity platform with task lists, mind maps, and chat.","Best For":"Content Creators","Free Plan Details":"Free plan includes unlimited tasks and 1,000 AI credits per month.","Keywords":"Taskade, AI productivity, mind maps, task management, collaboration"},
+  {"ID":"70","Category":"Productivity","Tool Name":"Todoist (AI Assistant)","What It Does":"A popular task manager that uses AI to break down tasks and suggest filters.","Best For":"Productivity","Free Plan Details":"Core task features are free; AI assistant available via integration.","Keywords":"Todoist, task manager, AI tasks, productivity tool, planner"},
+  {"ID":"71","Category":"Productivity","Tool Name":"ClickUp (AI Trial)","What It Does":"An all-in-one productivity platform with AI for docs, tasks, and chat.","Best For":"Business Owners","Free Plan Details":"Offers a limited free trial of its AI features for workspace members.","Keywords":"ClickUp, project management, AI workspace, productivity app, doc AI"},
+  {"ID":"72","Category":"Research & Search","Tool Name":"Perplexity AI","What It Does":"An AI-powered search engine that provides direct answers with citations.","Best For":"Students","Free Plan Details":"Free version allows for unlimited basic searches and limited \"Pro\" searches.","Keywords":"Perplexity, AI search, citations, research assistant, answer engine"},
+  {"ID":"73","Category":"Research & Search","Tool Name":"Consensus","What It Does":"A search engine that uses AI to find answers in scientific research papers.","Best For":"Students","Free Plan Details":"Free version provides unlimited searches and basic AI summaries.","Keywords":"Consensus, science AI, research search, evidence based, paper search"},
+  {"ID":"74","Category":"Research & Search","Tool Name":"ResearchRabbit","What It Does":"A \"Spotify for Papers\" that helps you discover and map scientific literature.","Best For":"Students","Free Plan Details":"Completely free to use for researchers and students to map research.","Keywords":"ResearchRabbit, paper discovery, literature review, research map, academia"},
+  {"ID":"75","Category":"Research & Search","Tool Name":"Elicit","What It Does":"An AI research assistant that automates literature review tasks.","Best For":"Students","Free Plan Details":"Free tier provides one-time credits to test its research capabilities.","Keywords":"Elicit, literature review, research AI, paper summary, academic search"},
+  {"ID":"76","Category":"Research & Search","Tool Name":"ChatPDF","What It Does":"An AI tool that allows you to chat with any PDF document to extract info.","Best For":"Students","Free Plan Details":"Free plan allows 2 PDFs per day (up to 120 pages each).","Keywords":"ChatPDF, PDF AI, document chat, study tool, extract info"},
+  {"ID":"77","Category":"Research & Search","Tool Name":"Humata AI","What It Does":"A tool for analyzing long documents and technical papers using AI.","Best For":"Students","Free Plan Details":"Free tier includes 60 pages per month for document analysis.","Keywords":"Humata, document AI, research tool, technical analysis, PDF search"},
+  {"ID":"78","Category":"Research & Search","Tool Name":"Semantic Scholar","What It Does":"A free, AI-powered research tool for scientific literature by AI2.","Best For":"Students","Free Plan Details":"Completely free tool for searching and discovering academic papers.","Keywords":"Semantic Scholar, academic search, AI research, paper discovery, AI2"},
+  {"ID":"79","Category":"Research & Search","Tool Name":"Scite.ai (Trial)","What It Does":"An AI tool that helps researchers verify citations and see paper context.","Best For":"Students","Free Plan Details":"Offers a free trial and basic search features to see citation counts.","Keywords":"Scite, citation check, research verification, academic tool, smart citations"},
+  {"ID":"80","Category":"Research & Search","Tool Name":"Mendeley","What It Does":"A reference manager and academic social network with AI discovery features.","Best For":"Students","Free Plan Details":"Free version includes 2GB of cloud storage for reference management.","Keywords":"Mendeley, reference manager, citation tool, research storage, academic"},
+  {"ID":"81","Category":"Research & Search","Tool Name":"Scholarcy","What It Does":"An online flashcard and summarization tool for academic papers.","Best For":"Students","Free Plan Details":"Free version allows for limited summarization of open-access papers.","Keywords":"Scholarcy, paper summary, flashcards, research tool, speed reading"},
+  {"ID":"82","Category":"Data & Analytics","Tool Name":"Google Colab","What It Does":"A cloud-based Python environment with free access to GPUs for data science.","Best For":"Developers","Free Plan Details":"Free access to basic resources (RAM/GPU) for individual coding.","Keywords":"Google Colab, Python, data science, free GPU, machine learning"},
+  {"ID":"83","Category":"Data & Analytics","Tool Name":"Rows.com","What It Does":"A modern spreadsheet with built-in AI for data analysis and enrichment.","Best For":"Business Owners","Free Plan Details":"Free plan includes 10,000 tasks and unlimited AI spreadsheet features.","Keywords":"Rows, AI spreadsheet, data analysis, modern excel, automation"},
+  {"ID":"84","Category":"Data & Analytics","Tool Name":"Polymer Search","What It Does":"An AI tool that turns spreadsheets into searchable, interactive databases.","Best For":"Marketers","Free Plan Details":"Free version allows for creating basic interactive data visualizations.","Keywords":"Polymer, data visualization, database AI, spreadsheet search, data tool"},
+  {"ID":"85","Category":"Data & Analytics","Tool Name":"Julius AI","What It Does":"An AI data analyst that can analyze spreadsheets and create charts.","Best For":"Business Owners","Free Plan Details":"Free tier includes 15 messages/analyses per month.","Keywords":"Julius, data analyst AI, chart maker, spreadsheet AI, data analysis"},
+  {"ID":"86","Category":"Data & Analytics","Tool Name":"Akkio (Trial)","What It Does":"A no-code AI platform for predictive modeling and data analysis.","Best For":"Marketers","Free Plan Details":"Offers a free trial to build and test predictive AI models.","Keywords":"Akkio, no code AI, predictive analytics, lead scoring, data science"},
+  {"ID":"87","Category":"Data & Analytics","Tool Name":"Narrative BI","What It Does":"Generates automated insights and narratives from marketing data.","Best For":"Marketers","Free Plan Details":"Free plan includes basic reports for small datasets or 1 user.","Keywords":"Narrative BI, marketing analytics, data insights, automated reporting, BI"},
+  {"ID":"88","Category":"Data & Analytics","Tool Name":"Equals (Trial)","What It Does":"A next-generation spreadsheet for startups with SQL and AI power.","Best For":"Business Owners","Free Plan Details":"Provides a free trial to explore its AI and data connection features.","Keywords":"Equals, startup spreadsheet, SQL excel, AI data, financial model"},
+  {"ID":"89","Category":"Data & Analytics","Tool Name":"Coefficient","What It Does":"Connects live data from any source to your spreadsheet with AI help.","Best For":"Business Owners","Free Plan Details":"Free plan allows for 1,000 rows of data imports per month.","Keywords":"Coefficient, live data, sheet connector, AI imports, data automation"},
+  {"ID":"90","Category":"Data & Analytics","Tool Name":"Rose.ai","What It Does":"A cloud-based data platform for finding, cleaning, and visualizing data.","Best For":"Business Owners","Free Plan Details":"Offers free access to public datasets and basic visualization tools.","Keywords":"Rose, data platform, financial data, data cleaning, visualization"},
+  {"ID":"91","Category":"Data & Analytics","Tool Name":"Numerous.ai","What It Does":"An AI plugin for Excel and Google Sheets to automate data tasks.","Best For":"Business Owners","Free Plan Details":"Offers a limited free trial to test AI functions in spreadsheets.","Keywords":"Numerous, sheet AI, excel plugin, automate data, formula bot"},
+  {"ID":"92","Category":"Design & UI","Tool Name":"Canva","What It Does":"A popular design platform with a suite of \"Magic\" AI design tools.","Best For":"Marketers","Free Plan Details":"Free version includes Magic Edit, Magic Media, and basic AI features.","Keywords":"Canva, design AI, social media, magic edit, graphic design"},
+  {"ID":"93","Category":"Design & UI","Tool Name":"Uizard","What It Does":"An AI tool for designing wireframes, mockups, and prototypes instantly.","Best For":"Designers","Free Plan Details":"Free plan allows for 2 active projects and limited AI generation.","Keywords":"Uizard, UI design, prototyping, wireframe AI, app design"},
+  {"ID":"94","Category":"Design & UI","Tool Name":"Framer AI","What It Does":"An AI tool that generates complete, high-quality websites from text.","Best For":"Designers","Free Plan Details":"Free plan includes a Framer domain and limited AI design features.","Keywords":"Framer, website builder, AI design, web prototype, UI/UX"},
+  {"ID":"95","Category":"Design & UI","Tool Name":"Adobe Express","What It Does":"Adobe's quick design tool with AI for social media and basic graphics.","Best For":"Marketers","Free Plan Details":"Free plan includes 25 monthly generative credits and standard features.","Keywords":"Adobe Express, quick design, social media AI, free design tool, Adobe"},
+  {"ID":"96","Category":"Design & UI","Tool Name":"Photoroom","What It Does":"AI-powered background removal and product photography enhancement.","Best For":"Content Creators","Free Plan Details":"Free web tool for background removal and basic editing.","Keywords":"Photoroom, background remover, product photo, AI editor, photo tool"},
+  {"ID":"97","Category":"Design & UI","Tool Name":"ClipDrop","What It Does":"A suite of AI tools for image editing, upscaling, and object removal.","Best For":"Designers","Free Plan Details":"Free version includes limited daily uses of its AI editing tools.","Keywords":"ClipDrop, object removal, AI upscale, image editing, design tool"},
+  {"ID":"98","Category":"Design & UI","Tool Name":"Khroma","What It Does":"An AI color tool for designers to discover and save color palettes.","Best For":"Designers","Free Plan Details":"Completely free to use for generating and browsing color schemes.","Keywords":"Khroma, color palette, design tool, AI color, branding"},
+  {"ID":"99","Category":"Design & UI","Tool Name":"Huemint","What It Does":"An AI color palette generator that visualizes colors on real designs.","Best For":"Designers","Free Plan Details":"Free to use for generating and testing color schemes.","Keywords":"Huemint, color gen, palette AI, branding tool, UI colors"},
+  {"ID":"100","Category":"Design & UI","Tool Name":"Fontjoy","What It Does":"Uses deep learning to help designers find perfect font pairings.","Best For":"Designers","Free Plan Details":"Completely free to use for generating font combinations.","Keywords":"Fontjoy, font pairing, typography, design tool, font AI"},
+  {"ID":"101","Category":"Design & UI","Tool Name":"Looka","What It Does":"An AI logo maker and brand identity generator for small businesses.","Best For":"Business Owners","Free Plan Details":"Free to generate and preview logos; payment required to download.","Keywords":"Looka, logo maker, branding AI, business identity, AI designer"}
+];
 
-async function loadData(){
-  try{
-    const res=await fetch(DATA_URL,{redirect:'follow'});
-    const json=await res.json();
-    if(json.success&&json.data){
-      const seen=new Set();
-      allTools=json.data.filter(t=>{const k=t.ID+t['Tool Name'];if(seen.has(k))return false;seen.add(k);return true;});
-      renderSidebar(allTools);
-    }
-  }catch(e){
-    document.getElementById('sidebarNav').innerHTML='<div class="loading-state">⚠️ Could not load data.</div>';
-    console.error(e);
-  }
-}
+// category colors
+var COLORS = {
+  "Image Generation":"#8b5cf6",
+  "Video Generation":"#ef4444",
+  "Audio & Voice":"#f59e0b",
+  "Writing & Content":"#10b981",
+  "Code Assistant":"#3b82f6",
+  "AI Agents":"#ec4899",
+  "Productivity":"#06b6d4",
+  "Research & Search":"#84cc16",
+  "Data & Analytics":"#f97316",
+  "Design & UI":"#a855f7"
+};
 
-function groupByCategory(tools){
-  const g={};
-  tools.forEach(t=>{const c=t.Category||'Other';if(!g[c])g[c]=[];g[c].push(t);});
+function groupBy(arr){
+  var g={};
+  arr.forEach(function(t){
+    var c=t.Category||'Other';
+    if(!g[c]) g[c]=[];
+    g[c].push(t);
+  });
   return g;
 }
 
-function renderSidebar(tools){
-  const nav=document.getElementById('sidebarNav');
-  const groups=groupByCategory(tools);
-  if(!Object.keys(groups).length){nav.innerHTML='<div class="no-results">No tools found.</div>';return;}
+function renderNav(tools){
+  var nav=document.getElementById('nav');
+  var groups=groupBy(tools);
+  if(!Object.keys(groups).length){
+    nav.innerHTML='<div class="no-results">No tools found.</div>';
+    return;
+  }
   nav.innerHTML='';
-  Object.entries(groups).forEach(([cat,items])=>{
-    const color=CAT_COLORS[cat]||'#6b7280';
-    const g=document.createElement('div');
-    g.className='category-group open';
-    g.innerHTML=`<div class="category-header" onclick="this.parentElement.classList.toggle('open')">
-      <span class="category-dot" style="background:${color}"></span>
-      <span class="category-title">${cat}</span>
-      <span class="category-count">${items.length}</span>
-      <span class="category-arrow">▶</span>
-    </div>
-    <div class="tool-list">${items.map(t=>`<div class="tool-item" data-uid="${t.ID}||${t['Tool Name']}" onclick="selectTool('${t.ID}','${t['Tool Name'].replace(/'/g,"\'")}')">
-      <span class="tool-dot" style="background:${color}"></span>
-      <span class="tool-name">${t['Tool Name']}</span>
-    </div>`).join('')}</div>`;
-    nav.appendChild(g);
+  Object.keys(groups).forEach(function(cat){
+    var items=groups[cat];
+    var color=COLORS[cat]||'#888';
+    var div=document.createElement('div');
+    div.className='cat-group open';
+    var toolsHTML=items.map(function(t){
+      return '<div class="tool-item" data-id="'+t.ID+'" onclick="showTool('+t.ID+')">'+
+        '<span class="tdot" style="background:'+color+'"></span>'+
+        '<span class="tname">'+t["Tool Name"]+'</span></div>';
+    }).join('');
+    div.innerHTML=
+      '<div class="cat-header" onclick="this.parentElement.classList.toggle(\\'open\\')">'+
+        '<span class="cdot" style="background:'+color+'"></span>'+
+        '<span class="ctitle">'+cat+'</span>'+
+        '<span class="ccount">'+items.length+'</span>'+
+        '<span class="carrow">&#9658;</span>'+
+      '</div>'+
+      '<div class="tool-list">'+toolsHTML+'</div>';
+    nav.appendChild(div);
   });
 }
 
-function selectTool(id,name){
-  const tool=allTools.find(t=>t.ID===id&&t['Tool Name']===name);
-  if(!tool)return;
-  document.querySelectorAll('.tool-item').forEach(el=>el.classList.remove('active'));
-  document.querySelector(`[data-uid="${id}||${name}"]`)?.classList.add('active');
-  document.getElementById('welcomeScreen').style.display='none';
-  const detail=document.getElementById('toolDetail');
-  detail.classList.add('visible');
-  const color=CAT_COLORS[tool.Category]||'#6b7280';
-  const keywords=(tool.Keywords||'').split(',').map(k=>k.trim()).filter(Boolean);
-  detail.innerHTML=`
-    <div class="detail-header">
-      <span style="width:10px;height:10px;border-radius:50%;background:${color};display:inline-block;flex-shrink:0"></span>
-      <h2>${tool['Tool Name']}</h2>
-      <span class="detail-cat-badge" style="background:${color}22;color:${color}">${tool.Category}</span>
-    </div>
-    <div class="detail-body">
-      <div class="info-card"><div class="info-label">What It Does</div><div class="info-value">${tool['What It Does']||'—'}</div></div>
-      <div class="info-grid">
-        <div class="info-card"><div class="info-label">Best For</div><div class="info-value"><span class="best-for-badge" style="background:${color}18;color:${color}">👤 ${tool['Best For']||'—'}</span></div></div>
-        <div class="info-card"><div class="info-label">Tool ID</div><div class="info-value" style="color:var(--color-text-faint)">#${tool.ID}</div></div>
-      </div>
-      <div class="free-plan-card"><div class="info-label">🆓 Free Plan Details</div><div class="info-value">${tool['Free Plan Details']||'No free plan info.'}</div></div>
-      ${keywords.length?`<div class="info-card"><div class="info-label">Keywords</div><div class="keywords-row">${keywords.map(k=>`<span class="keyword-tag">${k}</span>`).join('')}</div></div>`:''}
-    </div>`;
+function showTool(id){
+  var tool=TOOLS.find(function(t){return Number(t.ID)===id;});
+  if(!tool) return;
+  document.querySelectorAll('.tool-item').forEach(function(el){el.classList.remove('active');});
+  var el=document.querySelector('[data-id="'+id+'"]');
+  if(el) el.classList.add('active');
+  document.getElementById('welcome').style.display='none';
+  var detail=document.getElementById('detail');
+  detail.className='detail show';
+  var color=COLORS[tool.Category]||'#888';
+  var kws=(tool.Keywords||'').split(',').map(function(k){return k.trim();}).filter(Boolean);
+  detail.innerHTML =
+    '<div class="dheader">'+
+      '<span style="width:10px;height:10px;border-radius:50%;background:'+color+';display:inline-block;flex-shrink:0"></span>'+
+      '<h2>'+tool["Tool Name"]+'</h2>'+
+      '<span class="dbadge" style="background:'+color+'22;color:'+color+'">'+tool.Category+'</span>'+
+    '</div>'+
+    '<div class="dbody">'+
+      '<div class="card"><div class="lbl">What It Does</div><div class="val">'+tool["What It Does"]+'</div></div>'+
+      '<div class="grid2">'+
+        '<div class="card"><div class="lbl">Best For</div><div class="val"><span class="best-tag" style="background:'+color+'18;color:'+color+'">&#128100; '+tool["Best For"]+'</span></div></div>'+
+        '<div class="card"><div class="lbl">Tool ID</div><div class="val" style="color:#aaa">#'+tool.ID+'</div></div>'+
+      '</div>'+
+      '<div class="free-card"><div class="lbl">&#x1F7E2; Free Plan Details</div><div class="val">'+tool["Free Plan Details"]+'</div></div>'+
+      (kws.length ? '<div class="card"><div class="lbl">Keywords</div><div class="kw-row">'+kws.map(function(k){return '<span class="kw">'+k+'</span>';}).join('')+'</div></div>' : '')+
+    '</div>';
 }
 
-function handleSearch(q){
+function doSearch(q){
   q=q.toLowerCase().trim();
-  if(!q){renderSidebar(allTools);return;}
-  const f=allTools.filter(t=>t['Tool Name']?.toLowerCase().includes(q)||t.Category?.toLowerCase().includes(q)||t.Keywords?.toLowerCase().includes(q)||t['What It Does']?.toLowerCase().includes(q)||t['Best For']?.toLowerCase().includes(q));
-  renderSidebar(f);
-  document.querySelectorAll('.category-group').forEach(g=>g.classList.add('open'));
+  var filtered=!q ? TOOLS : TOOLS.filter(function(t){
+    return (t["Tool Name"]||'').toLowerCase().includes(q) ||
+           (t.Category||'').toLowerCase().includes(q) ||
+           (t.Keywords||'').toLowerCase().includes(q) ||
+           (t["What It Does"]||'').toLowerCase().includes(q) ||
+           (t["Best For"]||'').toLowerCase().includes(q);
+  });
+  renderNav(filtered);
+  if(q) document.querySelectorAll('.cat-group').forEach(function(g){g.classList.add('open');});
 }
 
-function toggleTheme(){
-  const h=document.documentElement;
-  const d=h.getAttribute('data-theme')==='dark';
-  h.setAttribute('data-theme',d?'light':'dark');
-  document.querySelector('.theme-toggle').textContent=d?'🌙':'☀️';
-}
-
-loadData();
+// initial render
+renderNav(TOOLS);
 </script>
 </body>
 </html>
